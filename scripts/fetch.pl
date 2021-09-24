@@ -3,14 +3,16 @@
 # Author          : Johan Vromans
 # Created On      : Sat Jul  3 20:48:13 2021
 # Last Modified By: Johan Vromans
-# Last Modified On: Sun Jul  4 14:16:43 2021
-# Update Count    : 99
+# Last Modified On: Fri Sep 24 19:38:03 2021
+# Update Count    : 108
 # Status          : Unknown, Use with caution!
 
 ################ Common stuff ################
 
 use strict;
 use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
 # Package name.
 my $my_package = 'Lumix';
@@ -25,6 +27,8 @@ use Getopt::Long 2.13;
 my $device = "tz200.squirrel.nl";
 my $start = 0;
 my $count = 50;
+my $path;			# path override
+my @excludes;
 my $verbose = 1;		# verbose processing
 
 # Development options (not shown with -help).
@@ -46,6 +50,7 @@ my $TMPDIR = $ENV{TMPDIR} || $ENV{TEMP} || '/usr/tmp';
 ################ The Process ################
 
 use Lumix::Tools;
+use List::Util qw( any );
 
 my $have = $start + 1;		# get going
 
@@ -58,12 +63,20 @@ my $cam = Lumix::Tools->new( device  => $device,
 my $list = $cam->browsedirectchildren($start);
 
 for my $item ( @$list ) {
-
-    my $file = $item->{path} . "/" . $item->{file};
+    my $path = $path // $item->{path};
+    my $file = $path . "/" . $item->{file};
     warn(sprintf("%s %-10s %s\n", $item->{id}, $item->{title}, $file ))
       if $trace;
 
-    next if -s $file;
+    if ( any { $_ eq $item->{file} } @excludes ) {
+	warn("Exclude: $file\n") if $verbose;
+	next;
+    }
+
+    if ( -s $file ) {
+	warn("Exists: $file\n") if $verbose > 1;
+	next;
+    }
 
     open( my $fd, '>:raw', $file ) or die("$file: $!\n");
     print $fd $cam->getimage($item);
@@ -95,6 +108,8 @@ sub app_options {
 	GetOptions( 'device=s'  => \$device,
 		    'start=i'   => \$start,
 		    'count=i'   => \$count,
+		    'path=s'    => \$path,
+		    'exclude=s@' => \@excludes,
 		    'ident'	=> \$ident,
 		    'verbose+'	=> \$verbose,
 		    'quiet'	=> sub { $verbose = 0 },
