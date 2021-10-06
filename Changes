@@ -1,5 +1,12 @@
 Revision history for Lumix-Tools
 
+0.02	2021-10-06
+
+	Fix param error in camrequest.
+
+	Add poweroff capability.
+
 0.01    2021-07-04
-        First version, released on an unsuspecting world.
+
+	First version, released on an unsuspecting world.
 

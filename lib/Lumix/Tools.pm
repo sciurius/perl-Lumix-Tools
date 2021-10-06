@@ -112,7 +112,7 @@ Issues a CAM request.
 method camrequest ( $mode, %args ) {
 
     my $url = $.url . "/cam.cgi?mode=$mode";
-    $url .= join( '&', map { "$_=".$args{$_} } keys(%args ) ) if %args;
+    $url .= '&' . join( '&', map { "$_=".$args{$_} } keys(%args ) ) if %args;
     warn("CAMrequest url = $url\n") if $.trace;
 
     my $response = $.ua->get($url);
@@ -292,6 +292,16 @@ method getimage ( $item ) {
     croak( $response->status_line ) unless $response->is_success;
 
     return $response->decoded_content;
+}
+
+=head $cam->poweroff
+
+Poweroff.
+
+=cut
+
+method poweroff {
+    .camrequest( "camcmd", value => "poweroff" );
 }
 
 =head1 AUTHOR
