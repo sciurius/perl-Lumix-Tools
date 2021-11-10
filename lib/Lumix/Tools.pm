@@ -291,7 +291,24 @@ method getimage ( $item ) {
     my $response = $.ua->get($url);
     croak( $response->status_line ) unless $response->is_success;
 
-    return $response->decoded_content;
+    my $data = $response->decoded_content;
+
+#    foreach ( $response->header_field_names ) {
+#	warn( "$_: ", $response->header($_), "\n" );
+#    }
+#
+#    # Unfortunately, Lumix does not return a Content-Length header.
+#    my $retry = 5;
+#    while ( $retry && length($data) != $response->header("Content-Length") ) {
+#	$retry--;
+#	warn("Received ", length($data), " of ",
+#	     $response->header("Content-Length"), " bytes -- ",
+#	     $retry ? "retrying..." : "aborted", "\n");
+#	    last unless $retry;
+#    }
+#    return undef if !$retry;	# lijnfout-5
+
+    return $data;
 }
 
 =head $cam->poweroff
