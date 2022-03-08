@@ -3,8 +3,8 @@
 # Author          : Johan Vromans
 # Created On      : Sat Jul  3 20:48:13 2021
 # Last Modified By: Johan Vromans
-# Last Modified On: Wed Oct  6 13:15:21 2021
-# Update Count    : 119
+# Last Modified On: Tue Mar  8 16:52:48 2022
+# Update Count    : 129
 # Status          : Unknown, Use with caution!
 
 ################ Common stuff ################
@@ -60,6 +60,13 @@ my $cam = Lumix::Tools->new( device  => $device,
 			     trace   => $trace,
 			     debug   => $debug,
 			   );
+
+if ( $cam->{state} ) {
+    my ( $d, $n ) = $cam->state->{batt} =~ /^(\d+)\/(\d+)/;
+    use Net::MQTT::Simple 'mqtt.squirrel.nl';
+    Net::MQTT::Simple::publish( "tele/tz200/state",
+				sprintf("{\"battery\":%d}", 100*$d/$n ) );
+}
 
 my $list = $cam->browsedirectchildren($start);
 
