@@ -23,6 +23,25 @@ To install this module, run the following commands:
 	make test
 	make install
 
+## SCRIPTS
+
+`scripts/fetch.pl`
+
+Ths program attempts to transfer all new images to a predefined
+location in a predefined format. See the program docs for more info.
+
+`scripts/watch.sh`
+
+A script to wait for the camera to connect, and transfers all new
+images.
+
+Requires the `fetch.pl` script.
+
+`scripts/4kstills.sh`
+
+A script to extract the images from a 4K burst.
+
+Requires `vlc` and `exiftool`.
 
 ## SUPPORT AND DOCUMENTATION
 

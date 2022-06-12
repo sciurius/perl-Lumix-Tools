@@ -1,5 +1,11 @@
 Revision history for Lumix-Tools
 
+0.03
+
+	Add state reporting via MQTT (may not work for you).
+
+	Add script to extract images from a 4K burst.
+
 0.02	2021-10-06
 
 	Add sample watch script.

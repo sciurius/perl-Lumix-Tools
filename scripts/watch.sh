@@ -5,7 +5,6 @@
 
 host=tz200.squirrel.nl
 tmp=~/tmp/watch$$
-year=$(date +%Y)
 albums=`resinfo media.albums.root`
 
 current=off
@@ -18,6 +17,7 @@ do
 	if [ $current = "off" ]; then
 
 	    # Camera has been connected. Fetch images and poweroff.
+	    year=$(date +%Y)
 	    make -C "$albums/${year}" fetch POWEROFF=--poweroff > ${tmp} 2>&1
 	    mail -s "tz200: ${state}" jv < ${tmp}
 	fi
